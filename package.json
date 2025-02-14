@@ -9,13 +9,14 @@
     "dev": "parcel src/index.html",
     "start": "parcel watch manifest.json --host localhost --config @parcel/config-webextension",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "parcel build manifest.json --config @parcel/config-webextension --no-source-maps --no-scope-hoist",
+    "build": "rimraf dist/* && parcel build manifest.json --config @parcel/config-webextension --no-source-maps --no-scope-hoist",
     "package": "npm run build && web-ext build --source-dir dist --overwrite-dest"
   },
   "dependencies": {
     "preact": "^10.25.4"
   },
   "devDependencies": {
+    "rimraf": "^6.0.1",
     "@parcel/config-webextension": "^2.13.3",
     "@types/firefox-webext-browser": "^120.0.4",
     "@types/react": "^19.0.8",

@@ -1,0 +1,47 @@
+{
+  "manifest_version": 2,
+  "name": "Commandeer",
+  "version": "1.0",
+  "permissions": [
+    "tabs",
+    "activeTab",
+    "storage",
+    "scripting",
+    "tabHide",
+    "bookmarks",
+    "history",
+    "find",
+    "search",
+    "topSites"
+  ],
+  "description": "A Spotlight-like command bar for Firefox/Chrome that lets you search through your bookmarks, history, and open tabs.",
+
+  "icons": {
+    "48": "icons/border-48.png"
+  },
+
+  "background": {
+    "scripts": ["src/background.ts"]
+  },
+
+  "browser_action": {
+    "default_title": "Commandeer",
+    "default_popup": "src/index.html",
+    "default_area": "tabstrip"
+  },
+
+  "action": {
+    "default_title": "Commandeer",
+    "default_popup": "src/index.html",
+    "default_area": "tabstrip"
+  },
+  "commands": {
+    "_toggle-command-bar": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+0",
+        "mac": "Command+Shift+0"
+      },
+      "description": "Toggle the command bar"
+    }
+  }
+}

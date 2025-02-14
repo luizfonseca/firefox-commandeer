@@ -6,6 +6,11 @@ const BROWSER_COMMANDS = {
 /** Listener for registered manifest commands */
 browser.commands.onCommand.addListener(async (command) => {
   if (command === BROWSER_COMMANDS.TOGGLE_SEARCH_BAR) {
-    browser.action.openPopup();
+    // For manifest v3
+    if (browser.action) {
+      browser.action.openPopup();
+    } else {
+      browser.browserAction.openPopup();
+    }
   }
 });

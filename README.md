@@ -1,4 +1,9 @@
+
+
 # Firefox Command Bar
+
+<img width="500" alt="Screenshot 2025-02-17 at 01 47 49" src="https://github.com/user-attachments/assets/7103b522-bb21-449d-9923-1513f81db83a" />
+
 
 A simple command bar for Firefox that let's you search your tabs by title and URL, and switch between them using the keyboard.
 You can also search the web and eventually you might be able to do more.

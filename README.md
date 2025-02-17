@@ -31,7 +31,7 @@ pnpm install
 You can run the parcel hot-reload server using:
 
 ```bash
-npn run start
+npm run start
 ```
 
 You can then proceed to `about:debugging` on Firefox and load the extension from the `dist` folder.

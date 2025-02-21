@@ -127,6 +127,12 @@ export function App() {
 
       <div className={`group-footer ${footer.footer}`}>
         <div className={footer.command}>
+          <span className={footer.shortcutDescription}>navigate</span>
+          <span className={footer.shortcut}>&uarr;</span>
+          <span className={footer.shortcut}>&darr;</span>
+        </div>
+
+        <div className={footer.command}>
           <span className={footer.shortcutDescription}>select item</span>
           <span className={footer.shortcut}>enter</span>
         </div>

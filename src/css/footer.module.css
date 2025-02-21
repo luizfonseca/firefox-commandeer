@@ -5,7 +5,7 @@
     text-transform: uppercase;
     align-items: center;
     justify-items: center;
-    gap: 10px;
+    gap: 14px;
 }
 
 .command {
@@ -32,6 +32,7 @@
         border-top: 1px solid #222;
 
         .shortcut {
+            color: #888;
             border: 1px solid #444;
         }
     }

@@ -7,11 +7,13 @@ export default function SearchResults({
   onChange,
   activeTabIndex,
   searchTerm,
+  resultsRef,
 }: {
   tabs: browser.tabs.Tab[];
   onChange: (tab: browser.tabs.Tab) => Promise<void>;
   activeTabIndex: number;
   searchTerm: string;
+  resultsRef: React.RefObject<HTMLDivElement>;
 }) {
   const [currentSearchEngine, setCurrentSearchEngine] = useState("Google");
 
@@ -33,7 +35,11 @@ export default function SearchResults({
   }, []);
 
   return (
-    <div id="search-results" className={searchResults}>
+    <div
+      id="search-results"
+      className={searchResults.searchResults}
+      ref={resultsRef}
+    >
       {tabs.map((tab, index) => {
         return (
           <Tab

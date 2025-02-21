@@ -1,6 +1,6 @@
 .tabItem {
     display: flex;
-
+    gap: 10px;
     width: auto;
 
     padding: 10px 2px;
@@ -24,8 +24,8 @@
     margin: 0;
     padding: 0;
     font-size: 0.9rem;
-    color: #fff;
-    font-weight: 400 !important;
+
+    font-weight: 500 !important;
     text-shadow: 0 1px 1px 1px;
 }
 
@@ -39,9 +39,12 @@
 }
 
 .favicon {
-    flex-shrink: 0;
+    padding: 0 5px;
+
     margin-top: 2px;
     align-self: start;
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 .faviconWrapper {
@@ -49,16 +52,16 @@
     align-items: center;
     width: 20px;
     height: 25px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 10px;
 }
 
 .switchTab {
-    top: -5px;
+    top: 2px;
     position: absolute;
     right: 10px;
-    font-size: 0.8rem;
-    color: #999;
+    font-size: 0.6rem;
+    color: #555;
+    text-transform: uppercase;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -83,22 +86,13 @@
             color: #111;
         }
 
-        .faviconWrapper {
-            border: 1px solid #888;
-        }
-
         img {
             filter: invert();
         }
     }
 
     .title_header {
-        margin: 0;
-        padding: 0;
-        font-size: 0.9rem;
         color: #fff;
-        font-weight: 400 !important;
-        text-shadow: 0 1px 1px 1px;
     }
 
     .title_description {
@@ -128,22 +122,13 @@
             color: #fff;
         }
 
-        .faviconWrapper {
-            border: 1px solid #888;
-        }
-
         img {
             filter: invert();
         }
     }
 
     .title_header {
-        margin: 0;
-        padding: 0;
-        font-size: 0.9rem;
         color: black;
-        font-weight: 500 !important;
-        text-shadow: 0 1px 1px 1px;
     }
 
     .title_description {

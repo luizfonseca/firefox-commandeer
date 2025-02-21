@@ -20,7 +20,8 @@ h2 {
 .main-container {
     color: white;
     width: 700px;
-    height: 580px;
+    height: 500px;
+    max-height: 500px;
     margin: 0;
     padding: 0;
     font-family:
@@ -35,8 +36,13 @@ h2 {
         "Open Sans",
         "Helvetica Neue",
         sans-serif;
-
     overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+
+    .group-search {
+        flex-grow: 1;
+    }
 }
 
 hr {

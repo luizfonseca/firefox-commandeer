@@ -4,6 +4,7 @@ input {
     background: transparent;
     border: none;
     padding: 6px;
+    padding-left: 10px;
     outline: none;
     color: white;
     font-size: 1rem;

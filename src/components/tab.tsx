@@ -31,7 +31,7 @@ export const Tab = ({
 
   return (
     <div
-      className={`${tabItem.tabItem} ${isSelected ? tabItem.selected : ""}`}
+      className={`result-item ${tabItem.tabItem} ${isSelected ? `${tabItem.selected} is-selected` : ""}`}
       onClick={() => onChange(tab)}
       tabindex={tabindex}
     >

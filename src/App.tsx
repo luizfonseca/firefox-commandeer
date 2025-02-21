@@ -55,7 +55,7 @@ export function App() {
         ".result-item.is-selected",
       );
       selectedTab.scrollIntoView({
-        block: "start",
+        block: "center",
         behavior: "smooth",
       });
     }

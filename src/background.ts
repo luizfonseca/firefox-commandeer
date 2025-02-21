@@ -1,4 +1,4 @@
-// Manifest commands
+// Manifest commands are registered here
 const BROWSER_COMMANDS = {
   TOGGLE_SEARCH_BAR: "_toggle-command-bar",
 };

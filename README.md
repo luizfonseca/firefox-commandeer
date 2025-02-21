@@ -16,13 +16,9 @@ You can also search the web and eventually you might be able to do more.
 
 ## Installation
 
-We are using [pnpm](https://pnpm.io/) as our package manager. You can install it globally using npm:
+Install dependencies using `npm`:
 ```bash
-# install pnpm
-npm i -G pnpm
-
-# install dependencies
-pnpm install
+npm install
 ```
 
 

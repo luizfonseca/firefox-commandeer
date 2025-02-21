@@ -45,6 +45,7 @@ export function App() {
   };
 
   useEffect(() => {
+
     getInitialTabs();
   }, []);
 

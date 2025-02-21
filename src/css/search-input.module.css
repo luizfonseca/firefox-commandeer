@@ -28,3 +28,15 @@ input::placeholder {
 input:focus {
     outline: none;
 }
+
+@media (prefers-color-scheme: dark) {
+    input {
+        color: white;
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    input {
+        color: #333;
+    }
+}

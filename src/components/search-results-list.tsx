@@ -1,16 +1,25 @@
 import { useEffect, useState } from "react";
 import * as searchResults from "../css/search-results.module.css";
-import { Tab } from "./tab";
+import { SearchResultRow } from "./search-result-row";
 
-export default function SearchResults({
+type SearchResult = {
+  type: "tab" | "bookmark";
+  favIconUrl?: string;
+  title: string;
+  url: string;
+  tabId?: number; // Only for actual tabs
+  originalData?: browser.bookmarks.BookmarkTreeNode; // Only for bookmarks
+};
+
+export default function SearchResultsList({
   tabs,
   onChange,
   activeTabIndex,
   searchTerm,
   resultsRef,
 }: {
-  tabs: browser.tabs.Tab[];
-  onChange: (tab: browser.tabs.Tab) => Promise<void>;
+  tabs: SearchResult[];
+  onChange: (result: SearchResult) => Promise<void>;
   activeTabIndex: number;
   searchTerm: string;
   resultsRef: React.RefObject<HTMLDivElement>;
@@ -40,28 +49,27 @@ export default function SearchResults({
       className={searchResults.searchResults}
       ref={resultsRef}
     >
-      {tabs.map((tab, index) => {
+      {tabs.map((result, index) => {
         return (
-          <Tab
-            tab={tab}
+          <SearchResultRow
+            favIconUrl={result.favIconUrl}
+            title={result.title}
+            url={result.url}
             isSelected={index === activeTabIndex}
             tabindex={index + 1}
-            key={index}
-            onChange={onChange}
-            resultType="tab"
+            key={`${result.type}-${index}`}
+            onChange={async () => await onChange(result)}
+            resultType={result.type}
           />
         );
       })}
 
       {searchTerm !== "" && (
         <div className={searchResults.noResults}>
-          <Tab
-            // @ts-ignore -- expected to mismatch
-            tab={{
-              title: "Search for " + searchTerm,
-              url: `${currentSearchEngine}: "${searchTerm}"`,
-            }}
-            isSelected={tabs.length + 1 === activeTabIndex}
+          <SearchResultRow
+            title={"Search for " + searchTerm}
+            url={`${currentSearchEngine}: "${searchTerm}"`}
+            isSelected={tabs.length === activeTabIndex}
             tabindex={tabs.length + 1}
             resultType="search"
             onChange={() => triggerSearch(searchTerm)}

@@ -18,6 +18,7 @@ export function App() {
   >(undefined);
 
   const resultsListref = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const debouncedTerm = useDebounce(search, 150);
   const arrowDownPressed = useKeyPress("ArrowDown");
@@ -174,6 +175,15 @@ export function App() {
   }, []);
 
   useEffect(() => {
+    // Focus the search input after the component has rendered
+    requestAnimationFrame(() => {
+      if (searchInputRef.current) {
+        searchInputRef.current.focus();
+      }
+    });
+  }, []);
+
+  useEffect(() => {
     if (debouncedTerm.length > 0) {
       searchTabs(debouncedTerm);
     } else {
@@ -211,6 +221,7 @@ export function App() {
           autoFocus
           type="text"
           placeholder="Search tabs, bookmarks, history, downloads and more..."
+          ref={searchInputRef}
         />
 
         <hr />

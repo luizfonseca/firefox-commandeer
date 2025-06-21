@@ -31,10 +31,11 @@ export function App() {
 
     const traverse = (nodes: browser.bookmarks.BookmarkTreeNode[]) => {
       for (const node of nodes) {
+        // Only include actual bookmarks (not folders)
         if (node.url) {
-          // Only include actual bookmarks (not folders)
           bookmarks.push(node);
         }
+
         if (node.children) {
           traverse(node.children);
         }
@@ -70,7 +71,6 @@ export function App() {
       getAllBookmarks(),
     ]);
 
-    // Convert tabs to SearchResult format
     const tabResults: SearchResult[] = browserTabs.map((tab) => ({
       type: "tab",
       favIconUrl: tab.favIconUrl,
@@ -153,6 +153,7 @@ export function App() {
       const selectedTab = resultsListref.current.querySelector(
         ".result-item.is-selected"
       );
+
       selectedTab?.scrollIntoView({
         block: "center",
         behavior: "smooth",
@@ -207,7 +208,7 @@ export function App() {
           className={searchInput}
           value={search}
           onChange={(e) => setSearch(e.currentTarget.value)}
-          autofocus
+          autoFocus
           type="text"
           placeholder="Search tabs, bookmarks, history, downloads and more..."
         />

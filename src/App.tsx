@@ -1,25 +1,19 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import SearchResultsList from "./components/search-results-list";
+import SearchResultsList, {
+  SearchResult,
+} from "./components/search-results-list";
 import * as footer from "./css/footer.module.css";
 import * as searchInput from "./css/search-input.module.css";
 import "./global.css";
 import { useDebounce } from "./hooks/useDebounce";
 import { useKeyPress } from "./hooks/useKeyPress";
 
-type SearchResult = {
-  type: "tab" | "bookmark";
-  favIconUrl?: string;
-  title: string;
-  url: string;
-  tabId?: number; // Only for actual tabs
-  originalData?: browser.bookmarks.BookmarkTreeNode; // Only for bookmarks
-};
-
 export function App() {
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   const [platform, setPlatform] = useState<browser.runtime.PlatformOs>("mac");
   const [search, setSearch] = useState<string>("");
   const [tabs, setTabs] = useState<SearchResult[]>([]);
+  const [currentSearchEngine, setCurrentSearchEngine] = useState("Google");
 
   const resultsListref = useRef<HTMLDivElement>(null);
 
@@ -49,7 +43,7 @@ export function App() {
     return bookmarks;
   };
 
-  const getFaviconUrl = (url: string): string | undefined => {
+  const getFaviconUrl = (url: string | undefined): string | undefined => {
     if (!url) return undefined;
 
     try {
@@ -57,6 +51,14 @@ export function App() {
       return `${urlObj.protocol}//${urlObj.hostname}/favicon.ico`;
     } catch {
       return undefined;
+    }
+  };
+
+  const findDefaultEngine = async () => {
+    const engines = await browser.search.get();
+    const defaultEngine = engines.find((e) => e.isDefault);
+    if (defaultEngine) {
+      setCurrentSearchEngine(defaultEngine.name);
     }
   };
 
@@ -71,19 +73,11 @@ export function App() {
       type: "tab",
       favIconUrl: tab.favIconUrl,
       title: tab.title || "Untitled",
-      url: tab.url || "",
+      url: tab.url,
       tabId: tab.id,
     }));
 
-    const bookmarkResults: SearchResult[] = bookmarks.map((bookmark) => ({
-      type: "bookmark",
-      favIconUrl: getFaviconUrl(bookmark.url || ""),
-      title: bookmark.title || "Untitled",
-      url: bookmark.url || "",
-      originalData: bookmark,
-    }));
-
-    setTabs([...tabResults, ...bookmarkResults]);
+    setTabs(tabResults);
   };
 
   const activateTab = async (result: SearchResult) => {
@@ -91,6 +85,11 @@ export function App() {
       await browser.tabs.update(result.tabId, { active: true });
     } else if (result.type === "bookmark") {
       await browser.tabs.create({ url: result.url });
+    } else if (result.type === "search") {
+      await browser.search.query({
+        text: result.title,
+        disposition: "NEW_TAB",
+      });
     }
 
     if (window) {
@@ -137,7 +136,16 @@ export function App() {
       })
     );
 
-    setTabs([...tabResults, ...bookmarkResults]);
+    const searchResult: SearchResult[] = [
+      {
+        type: "search",
+        favIconUrl: undefined,
+        title: "Search for " + term,
+        url: `${currentSearchEngine}: "${term}"`,
+      },
+    ];
+
+    setTabs([...tabResults, ...bookmarkResults, ...searchResult]);
   };
 
   const scrollItemIntoView = () => {
@@ -161,6 +169,7 @@ export function App() {
   useEffect(() => {
     getInitialTabs();
     setCurrentPlatform();
+    findDefaultEngine();
   }, []);
 
   useEffect(() => {
@@ -211,7 +220,6 @@ export function App() {
           tabs={tabs}
           activeTabIndex={activeTabIndex}
           onChange={activateTab}
-          searchTerm={search}
           resultsRef={resultsListref}
         />
       </div>

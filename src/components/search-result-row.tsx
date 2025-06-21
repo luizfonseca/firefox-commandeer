@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import * as tabItem from "../css/tab-item.module.css";
+import { useEffect, useState } from "react";
+import * as styles from "../css/search-result-row.module.css";
 import { useKeyPress } from "../hooks/useKeyPress";
 
 import defaultFavicon from "../../icons/q-mark.svg";
@@ -26,6 +26,7 @@ export const SearchResultRow = ({
   resultType = "tab",
 }: Props) => {
   const isEnterPressed = useKeyPress("Enter");
+  const [favIconImageError, setFavIconImageError] = useState(false);
 
   useEffect(() => {
     if (isEnterPressed && isSelected) {
@@ -33,13 +34,25 @@ export const SearchResultRow = ({
     }
   }, [isEnterPressed]);
 
+  useEffect(() => {
+    setFavIconImageError(false);
+  }, [favIconUrl]);
+
   const getIcon = () => {
-    if (favIconUrl) {
-      return <img src={favIconUrl} width={20} height={20} alt="favicon" />;
+    if (favIconUrl && !favIconImageError) {
+      return (
+        <img
+          src={favIconUrl}
+          width={20}
+          height={20}
+          alt=""
+          onError={() => setFavIconImageError(true)}
+        />
+      );
     }
 
     if (resultType === "bookmark") {
-      return <div className={tabItem.bookmarkIcon}>📄</div>;
+      return <div className={styles.bookmarkIcon}>📄</div>;
     }
 
     return <img src={defaultFavicon} width={20} height={20} alt="ico" />;
@@ -60,25 +73,22 @@ export const SearchResultRow = ({
 
   return (
     <div
-      className={`result-item ${tabItem.tabItem} ${
-        isSelected ? `${tabItem.selected} is-selected` : ""
+      className={`result-item ${styles.resultItem} ${
+        isSelected ? `${styles.selected} is-selected` : ""
       }`}
       onClick={() => onChange()}
       tabindex={tabindex}
     >
-      <div className={tabItem.favicon}>
-        <div className={tabItem.faviconWrapper}>{getIcon()}</div>
+      <div className={styles.favicon}>
+        <div className={styles.faviconWrapper}>{getIcon()}</div>
       </div>
-      <div className={tabItem.title}>
-        <h4 className={tabItem.title_header}>
-          {resultType === "bookmark" && (
-            <span className={tabItem.resultTypeIndicator}>📄 </span>
-          )}
-          {title}
-        </h4>
-        <p className={tabItem.title_description}>{url}</p>
+      <div className={styles.title}>
+        <div className={styles.titleAndUrl}>
+          <h4 className={styles.title_header}>{title}</h4>
+          <p className={styles.title_description}>{url}</p>
+        </div>
 
-        {isSelected && <p className={tabItem.switchTab}>{getActionText()}</p>}
+        {isSelected && <p className={styles.switchTab}>{getActionText()}</p>}
       </div>
     </div>
   );

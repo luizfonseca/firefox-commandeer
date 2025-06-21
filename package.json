@@ -7,9 +7,9 @@
   "type": "module",
   "scripts": {
     "dev": "parcel src/index.html",
-    "start": "parcel watch src/index.html --host localhost --config @parcel/config-webextension",
+    "start": "parcel watch manifest.json --host localhost --config @parcel/config-webextension",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rimraf dist && parcel build manifest.json --config @parcel/config-webextension --no-source-maps --no-scope-hoist",
+    "build": "rimraf dist/* && parcel build manifest.json --config @parcel/config-webextension --no-source-maps --no-scope-hoist",
     "package": "npm run build && web-ext build --source-dir dist --overwrite-dest"
   },
   "dependencies": {

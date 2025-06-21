@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import * as searchResults from "../css/search-results.module.css";
 import { SearchResultRow } from "./search-result-row";
 
-type SearchResult = {
-  type: "tab" | "bookmark";
-  favIconUrl?: string;
+export type SearchResult = {
+  type: "tab" | "bookmark" | "search";
+  favIconUrl: string | undefined;
   title: string;
   url: string;
   tabId?: number; // Only for actual tabs
@@ -15,13 +15,11 @@ export default function SearchResultsList({
   tabs,
   onChange,
   activeTabIndex,
-  searchTerm,
   resultsRef,
 }: {
   tabs: SearchResult[];
   onChange: (result: SearchResult) => Promise<void>;
   activeTabIndex: number;
-  searchTerm: string;
   resultsRef: React.RefObject<HTMLDivElement>;
 }) {
   const [currentSearchEngine, setCurrentSearchEngine] = useState("Google");
@@ -63,19 +61,6 @@ export default function SearchResultsList({
           />
         );
       })}
-
-      {searchTerm !== "" && (
-        <div className={searchResults.noResults}>
-          <SearchResultRow
-            title={"Search for " + searchTerm}
-            url={`${currentSearchEngine}: "${searchTerm}"`}
-            isSelected={tabs.length === activeTabIndex}
-            tabindex={tabs.length + 1}
-            resultType="search"
-            onChange={() => triggerSearch(searchTerm)}
-          />
-        </div>
-      )}
     </div>
   );
 }

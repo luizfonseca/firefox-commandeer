@@ -1,4 +1,4 @@
-.tabItem {
+.resultItem {
   display: flex;
   gap: 10px;
   width: auto;
@@ -15,9 +15,17 @@
 
 .title {
   min-width: 0;
-  text-wrap: nowrap;
-  position: relative;
   width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 0px 5px;
+}
+
+.titleAndUrl {
+  min-width: 0;
+  overflow: hidden;
 }
 
 .title_header {
@@ -27,6 +35,10 @@
 
   font-weight: 500 !important;
   text-shadow: 0 1px 1px 1px;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .title_description {
@@ -35,7 +47,9 @@
   padding: 0;
   font-size: 0.85rem;
 
+  overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .favicon {
@@ -43,16 +57,18 @@
 
   margin-top: 2px;
   align-self: start;
-  border-radius: 10px;
-  overflow: hidden;
+  margin-right: 4px;
 }
 
 .faviconWrapper {
   display: flex;
   align-items: center;
-  width: 20px;
-  height: 25px;
-  border-radius: 10px;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  background: white;
+  border: 1px solid transparent;
 }
 
 .bookmarkIcon {
@@ -71,26 +87,25 @@
 }
 
 .switchTab {
-  top: 2px;
-  position: absolute;
-  right: 10px;
   font-size: 0.6rem;
   color: #555;
   text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 @media (prefers-color-scheme: dark) {
-  .tabItem {
+  .resultItem {
     color: white;
   }
 
-  .tabItem:active {
+  .resultItem:active {
     background-color: #222;
   }
 
   .selected,
-  .tabItem:hover,
-  .tabItem:focus {
+  .resultItem:hover,
+  .resultItem:focus {
     background-color: whitesmoke;
 
     p {
@@ -120,17 +135,17 @@
 }
 
 @media (prefers-color-scheme: light) {
-  .tabItem {
+  .resultItem {
     color: black;
   }
 
-  .tabItem:active {
+  .resultItem:active {
     background-color: #333;
   }
 
   .selected,
-  .tabItem:hover,
-  .tabItem:focus {
+  .resultItem:hover,
+  .resultItem:focus {
     background-color: #222;
 
     p {
@@ -143,10 +158,6 @@
 
     .resultTypeIndicator {
       color: #fff;
-    }
-
-    img {
-      filter: invert();
     }
   }
 

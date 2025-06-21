@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import * as searchResults from "../css/search-results.module.css";
 import { SearchResultRow } from "./search-result-row";
 
@@ -22,25 +21,6 @@ export default function SearchResultsList({
   activeTabIndex: number;
   resultsRef: React.RefObject<HTMLDivElement>;
 }) {
-  const [currentSearchEngine, setCurrentSearchEngine] = useState("Google");
-
-  const triggerSearch = async (term: string) => {
-    await browser.search.query({ text: term, disposition: "NEW_TAB" });
-    window.close();
-  };
-
-  const findDefaultEngine = async () => {
-    const engines = await browser.search.get();
-    const defaultEngine = engines.find((e) => e.isDefault);
-    if (defaultEngine) {
-      setCurrentSearchEngine(defaultEngine.name);
-    }
-  };
-
-  useEffect(() => {
-    findDefaultEngine();
-  }, []);
-
   return (
     <div
       id="search-results"

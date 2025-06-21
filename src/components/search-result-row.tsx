@@ -46,16 +46,12 @@ export const SearchResultRow = ({
           width={20}
           height={20}
           alt=""
-          onError={() => setFavIconImageError(true)}
+          onError={() => setFavIconImageError(true)} // best way to check if a iconUrl is valid by loading an <img /> with it and checking if it fails
         />
       );
     }
 
-    if (resultType === "bookmark") {
-      return <div className={styles.bookmarkIcon}>📄</div>;
-    }
-
-    return <img src={defaultFavicon} width={20} height={20} alt="ico" />;
+    return <div className={styles.bookmarkIcon}>📄</div>;
   };
 
   const getActionText = () => {

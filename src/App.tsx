@@ -13,7 +13,9 @@ export function App() {
   const [platform, setPlatform] = useState<browser.runtime.PlatformOs>("mac");
   const [search, setSearch] = useState<string>("");
   const [tabs, setTabs] = useState<SearchResult[]>([]);
-  const [currentSearchEngine, setCurrentSearchEngine] = useState("Google");
+  const [currentSearchEngine, setCurrentSearchEngine] = useState<
+    string | undefined
+  >(undefined);
 
   const resultsListref = useRef<HTMLDivElement>(null);
 

@@ -68,7 +68,7 @@
   height: 30px;
   border-radius: 4px;
   background: white;
-  border: 1px solid transparent;
+  border: 1px solid #222;
 }
 
 .bookmarkIcon {
@@ -118,10 +118,6 @@
 
     .resultTypeIndicator {
       color: #111;
-    }
-
-    img {
-      filter: invert();
     }
   }
 

@@ -6,8 +6,7 @@ export type SearchResult = {
   favIconUrl: string | undefined;
   title: string;
   url: string;
-  tabId?: number; // Only for actual tabs
-  originalData?: browser.bookmarks.BookmarkTreeNode; // Only for bookmarks
+  tabId?: number; // Only for actual open tabs
 };
 
 export default function SearchResultsList({

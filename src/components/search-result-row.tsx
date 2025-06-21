@@ -80,7 +80,9 @@ export const SearchResultRow = ({
       </div>
       <div className={styles.title}>
         <div className={styles.titleAndUrl}>
-          <h4 className={styles.title_header}>{title}</h4>
+          <h4 className={styles.title_header}>
+            {resultType === "search" ? "Search for " + title : title}
+          </h4>
           <p className={styles.title_description}>{url}</p>
         </div>
 

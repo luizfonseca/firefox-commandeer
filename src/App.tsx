@@ -119,7 +119,6 @@ export function App() {
         bookmark?.url?.toLowerCase().includes(lowerTerm)
     );
 
-    // Convert to SearchResult format
     const tabResults: SearchResult[] = filteredTabs.map((tab) => ({
       type: "tab",
       favIconUrl: tab.favIconUrl,
@@ -134,7 +133,6 @@ export function App() {
         favIconUrl: getFaviconUrl(bookmark.url || ""),
         title: bookmark.title || "Untitled",
         url: bookmark.url || "",
-        originalData: bookmark,
       })
     );
 
@@ -142,7 +140,7 @@ export function App() {
       {
         type: "search",
         favIconUrl: undefined,
-        title: "Search for " + term,
+        title: term,
         url: `${currentSearchEngine}: "${term}"`,
       },
     ];

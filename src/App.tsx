@@ -83,7 +83,7 @@ export function App() {
     setTabs(tabResults);
   };
 
-  const activateTab = async (result: SearchResult) => {
+  const activateSearchResult = async (result: SearchResult) => {
     if (result.type === "tab" && result.tabId) {
       await browser.tabs.update(result.tabId, { active: true });
     } else if (result.type === "bookmark") {
@@ -146,7 +146,7 @@ export function App() {
       },
     ];
 
-    setTabs([...tabResults, ...bookmarkResults, ...searchResult]);
+    setTabs([...bookmarkResults, ...tabResults, ...searchResult]);
   };
 
   const scrollItemIntoView = () => {
@@ -231,7 +231,7 @@ export function App() {
         <SearchResultsList
           tabs={tabs}
           activeTabIndex={activeTabIndex}
-          onChange={activateTab}
+          onChange={activateSearchResult}
           resultsRef={resultsListref}
         />
       </div>

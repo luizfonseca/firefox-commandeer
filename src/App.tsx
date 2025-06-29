@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import SearchResults from "./components/search-results";
+import SearchResultsList, {
+  SearchResult,
+} from "./components/search-results-list";
 import * as footer from "./css/footer.module.css";
 import * as searchInput from "./css/search-input.module.css";
 import "./global.css";
@@ -10,25 +12,88 @@ export function App() {
   const [activeTabIndex, setActiveTabIndex] = useState(0);
   const [platform, setPlatform] = useState<browser.runtime.PlatformOs>("mac");
   const [search, setSearch] = useState<string>("");
-  const [tabs, setTabs] = useState<browser.tabs.Tab[]>([]);
+  const [tabs, setTabs] = useState<SearchResult[]>([]);
+  const [currentSearchEngine, setCurrentSearchEngine] = useState<
+    string | undefined
+  >(undefined);
 
   const resultsListref = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const debouncedTerm = useDebounce(search, 150);
   const arrowDownPressed = useKeyPress("ArrowDown");
   const arrowUpPressed = useKeyPress("ArrowUp");
 
-  const getInitialTabs = async () => {
-    const tabs = await browser.tabs.query({});
-    setTabs(tabs);
+  const getAllBookmarks = async (): Promise<
+    browser.bookmarks.BookmarkTreeNode[]
+  > => {
+    const bookmarkTree = await browser.bookmarks.getTree();
+    const bookmarks: browser.bookmarks.BookmarkTreeNode[] = [];
+
+    const traverse = (nodes: browser.bookmarks.BookmarkTreeNode[]) => {
+      for (const node of nodes) {
+        // Only include actual bookmarks (not folders)
+        if (node.url) {
+          bookmarks.push(node);
+        }
+
+        if (node.children) {
+          traverse(node.children);
+        }
+      }
+    };
+
+    traverse(bookmarkTree);
+    return bookmarks;
   };
 
-  const activateTab = async (tab: browser.tabs.Tab) => {
-    if (!tab.id) {
-      return;
-    }
+  const getFaviconUrl = (url: string | undefined): string | undefined => {
+    if (!url) return undefined;
 
-    await browser.tabs.update(tab.id, { active: true });
+    try {
+      const urlObj = new URL(url);
+      return `${urlObj.protocol}//${urlObj.hostname}/favicon.ico`;
+    } catch {
+      return undefined;
+    }
+  };
+
+  const findDefaultEngine = async () => {
+    const engines = await browser.search.get();
+    const defaultEngine = engines.find((e) => e.isDefault);
+    if (defaultEngine) {
+      setCurrentSearchEngine(defaultEngine.name);
+    }
+  };
+
+  const getInitialTabs = async () => {
+    const [browserTabs, bookmarks] = await Promise.all([
+      browser.tabs.query({}),
+      getAllBookmarks(),
+    ]);
+
+    const tabResults: SearchResult[] = browserTabs.map((tab) => ({
+      type: "tab",
+      favIconUrl: tab.favIconUrl,
+      title: tab.title || "Untitled",
+      url: tab.url,
+      tabId: tab.id,
+    }));
+
+    setTabs(tabResults);
+  };
+
+  const activateSearchResult = async (result: SearchResult) => {
+    if (result.type === "tab" && result.tabId) {
+      await browser.tabs.update(result.tabId, { active: true });
+    } else if (result.type === "bookmark") {
+      await browser.tabs.create({ url: result.url });
+    } else if (result.type === "search") {
+      await browser.search.query({
+        text: result.title,
+        disposition: "NEW_TAB",
+      });
+    }
 
     if (window) {
       window.close();
@@ -36,25 +101,61 @@ export function App() {
   };
 
   const searchTabs = async (term: string) => {
-    const allTabs = await browser.tabs.query({});
+    const [allTabs, allBookmarks] = await Promise.all([
+      browser.tabs.query({}),
+      getAllBookmarks(),
+    ]);
 
-    // Normalize input to prevent uppercase/lowercase differences
-    // filter tabs that match the input and/or url
+    const lowerTerm = term.toLowerCase();
+
     const filteredTabs = allTabs.filter(
       (tab) =>
-        tab?.title?.toLowerCase().includes(term.toLowerCase()) ||
-        tab?.url?.toLowerCase().includes(term.toLowerCase()),
+        tab?.title?.toLowerCase().includes(lowerTerm) ||
+        tab?.url?.toLowerCase().includes(lowerTerm)
     );
 
-    setTabs(filteredTabs);
+    const filteredBookmarks = allBookmarks.filter(
+      (bookmark) =>
+        bookmark?.title?.toLowerCase().includes(lowerTerm) ||
+        bookmark?.url?.toLowerCase().includes(lowerTerm)
+    );
+
+    const tabResults: SearchResult[] = filteredTabs.map((tab) => ({
+      type: "tab",
+      favIconUrl: tab.favIconUrl,
+      title: tab.title || "Untitled",
+      url: tab.url || "",
+      tabId: tab.id,
+    }));
+
+    const bookmarkResults: SearchResult[] = filteredBookmarks.map(
+      (bookmark) => ({
+        type: "bookmark",
+        favIconUrl: getFaviconUrl(bookmark.url || ""),
+        title: bookmark.title || "Untitled",
+        url: bookmark.url || "",
+      })
+    );
+
+    const searchResult: SearchResult[] = [
+      {
+        type: "search",
+        favIconUrl: undefined,
+        title: term,
+        url: `${currentSearchEngine}: "${term}"`,
+      },
+    ];
+
+    setTabs([...bookmarkResults, ...tabResults, ...searchResult]);
   };
 
   const scrollItemIntoView = () => {
     if (resultsListref.current) {
       const selectedTab = resultsListref.current.querySelector(
-        ".result-item.is-selected",
+        ".result-item.is-selected"
       );
-      selectedTab.scrollIntoView({
+
+      selectedTab?.scrollIntoView({
         block: "center",
         behavior: "smooth",
       });
@@ -70,6 +171,16 @@ export function App() {
   useEffect(() => {
     getInitialTabs();
     setCurrentPlatform();
+    findDefaultEngine();
+  }, []);
+
+  useEffect(() => {
+    // Focus the search input after the component has rendered
+    requestAnimationFrame(() => {
+      if (searchInputRef.current) {
+        searchInputRef.current.focus();
+      }
+    });
   }, []);
 
   useEffect(() => {
@@ -107,20 +218,20 @@ export function App() {
           className={searchInput}
           value={search}
           onChange={(e) => setSearch(e.currentTarget.value)}
-          autofocus
+          autoFocus
           type="text"
           placeholder="Search tabs, bookmarks, history, downloads and more..."
+          ref={searchInputRef}
         />
 
         <hr />
       </div>
 
       <div className="group-search">
-        <SearchResults
+        <SearchResultsList
           tabs={tabs}
           activeTabIndex={activeTabIndex}
-          onChange={activateTab}
-          searchTerm={search}
+          onChange={activateSearchResult}
           resultsRef={resultsListref}
         />
       </div>

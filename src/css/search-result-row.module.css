@@ -1,0 +1,167 @@
+.resultItem {
+  display: flex;
+  gap: 10px;
+  width: auto;
+
+  padding: 10px 2px;
+  margin: 0;
+  border-radius: 5px;
+
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.05s ease-in-out;
+}
+
+.title {
+  min-width: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 0px 5px;
+}
+
+.titleAndUrl {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.title_header {
+  margin: 0;
+  padding: 0;
+  font-size: 0.9rem;
+
+  font-weight: 500 !important;
+  text-shadow: 0 1px 1px 1px;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.title_description {
+  margin: 0;
+  margin-top: 4px;
+  padding: 0;
+  font-size: 0.85rem;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.favicon {
+  padding: 0 5px;
+
+  margin-top: 2px;
+  align-self: start;
+  margin-right: 4px;
+}
+
+.faviconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  background: white;
+  border: 1px solid #222;
+}
+
+.bookmarkIcon {
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+}
+
+.resultTypeIndicator {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  margin-right: 4px;
+}
+
+.switchTab {
+  font-size: 0.6rem;
+  color: #555;
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  .resultItem {
+    color: white;
+  }
+
+  .resultItem:active {
+    background-color: #222;
+  }
+
+  .selected,
+  .resultItem:hover,
+  .resultItem:focus {
+    background-color: whitesmoke;
+
+    p {
+      color: #999;
+    }
+
+    .title_header {
+      color: #111;
+    }
+
+    .resultTypeIndicator {
+      color: #111;
+    }
+  }
+
+  .title_header {
+    color: #fff;
+  }
+
+  .title_description {
+    color: #444;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .resultItem {
+    color: black;
+  }
+
+  .resultItem:active {
+    background-color: #333;
+  }
+
+  .selected,
+  .resultItem:hover,
+  .resultItem:focus {
+    background-color: #222;
+
+    p {
+      color: #999;
+    }
+
+    .title_header {
+      color: #fff;
+    }
+
+    .resultTypeIndicator {
+      color: #fff;
+    }
+  }
+
+  .title_header {
+    color: black;
+  }
+
+  .title_description {
+    color: #888;
+  }
+}
